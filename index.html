@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Manhwa Reader</title>
+
+<style>
+
+body{
+margin:0;
+background:#0f0f0f;
+font-family:Arial;
+color:white;
+}
+
+header{
+background:#151515;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:22px;
+color:#ff6740;
+font-weight:bold;
+}
+
+.search{
+padding:8px;
+border:none;
+border-radius:6px;
+width:200px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.card{
+background:#1b1b1b;
+border-radius:10px;
+overflow:hidden;
+cursor:pointer;
+transition:0.2s;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.card img{
+width:100%;
+height:250px;
+object-fit:cover;
+}
+
+.title{
+padding:10px;
+text-align:center;
+font-weight:bold;
+}
+
+.reader{
+display:none;
+text-align:center;
+padding:20px;
+}
+
+.reader img{
+width:100%;
+max-width:900px;
+display:block;
+margin:auto;
+margin-bottom:10px;
+}
+
+.bookmark{
+position:fixed;
+bottom:20px;
+left:20px;
+background:#ff6740;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<div class="logo">ManhwaWeb</div>
+<input class="search" placeholder="Search manga..." onkeyup="searchManga(this.value)">
+</header>
+
+<div id="library" class="grid">
+
+<div class="card" onclick="openReader('Lookism')">
+<img src="https://i.imgur.com/n1liAuB.jpeg">
+<div class="title">Lookism</div>
+</div>
+
+</div>
+
+<div id="reader" class="reader">
+
+<h2 id="mangaTitle"></h2>
+
+<div id="pages"></div>
+
+<button class="bookmark" onclick="bookmark()">⭐ Bookmark</button>
+
+</div>
+
+<script>
+
+let chapter = 504
+let loading = false
+
+function openReader(title){
+
+document.getElementById("library").style.display="none"
+document.getElementById("reader").style.display="block"
+
+document.getElementById("mangaTitle").innerText = title+" Chapter "+chapter
+
+loadChapter()
+
+}
+
+function loadChapter(){
+
+let container = document.getElementById("pages")
+
+for(let i=1;i<=3;i++){
+
+let img = document.createElement("img")
+
+img.src = "chapter"+chapter+"/page"+i+".jpg" 
+
+container.appendChild(img)
+
+}
+
+}
+
+window.addEventListener("scroll",function(){
+
+if((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200){
+
+if(!loading){
+
+loading = true
+chapter++
+
+loadChapter()
+
+setTimeout(()=>{loading=false},500)
+
+}
+
+}
+
+})
+
+function bookmark(){
+
+localStorage.setItem("bookmarkChapter",chapter)
+
+alert("Bookmark disimpan di chapter "+chapter)
+
+}
+
+function searchManga(query){
+
+query = query.toLowerCase()
+
+document.querySelectorAll(".card").forEach(card=>{
+
+let title = card.innerText.toLowerCase()
+
+if(title.includes(query)){
+
+card.style.display="block"
+
+}else{
+
+card.style.display="none"
+
+}
+
+})
+
+}
+
+</script>
+
+</body>
+</html>
